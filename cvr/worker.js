@@ -118,7 +118,7 @@ module.exports = function (runtime) {
             return Q.denodeify(nano.db.list)()
         })
         .then(_stashDbs)
-        //.then(_followCouch)
+        .then(_followCouch)
         .done(function () {
             server.listen(conf.server.port);
             log("CoverCouch start");
@@ -195,7 +195,7 @@ module.exports = function (runtime) {
 
             cvr.Request(Object.merge(p, h, true)).done(function (data) {
                 var ok = true,
-                    d = JSON.parse(data[1]),
+                    d = data,
                     u, c, s;
                 if (d && d.userCtx) {
                     u = d.userCtx;
@@ -254,7 +254,7 @@ module.exports = function (runtime) {
         pi.then(function (d) {
 
             // Memoize users
-            _stashUsers(d[0].rows);
+            _stashUsers(d.rows);
 
             // Follow _users db
             var feed = udb.follow({since: "now", include_docs: true});
@@ -312,11 +312,10 @@ module.exports = function (runtime) {
             if (!pre[e]) all.push(_cacheDbDdocs(e));
         });
 
-        Q.all(all).done(function (data) {
+        Q.all(all).then(function (data) {
             log(data.length + " DBs precached");
             pi.resolve();
         });
-
         return pi.promise;
     }
 
@@ -349,7 +348,7 @@ module.exports = function (runtime) {
             endkey:ddockey || "_design0"
         })
         .then(function (all) {
-            if (all[0].rows.length)  _unwindDdocs(dbv, all[0].rows);
+            if (all.rows.length)  _unwindDdocs(dbv, all.rows);
 
             if (dbv.ddoc['_design/acl']) log('Found _design/acl for ' + db);
 
@@ -364,7 +363,8 @@ module.exports = function (runtime) {
                     });
                 });
             }
-            else pi.resolve();
+            else 
+            pi.resolve();
         });
 
         return pi.promise;
@@ -426,7 +426,7 @@ module.exports = function (runtime) {
                         _list({include_docs: true, startkey: id, endkey: id})
                             .then(function (data) {
                                 log('Updated ' + id + ' for DB ' + db);
-                                _unwindDdocs(dbv, data[0].rows);
+                                _unwindDdocs(dbv, data.rows);
                             });
                     }
                 }

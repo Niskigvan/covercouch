@@ -25,7 +25,7 @@ module.exports = function (runtime) {
 
         couch: {
             url: "http://127.0.0.1:5984",                   // Couch URL
-            nano: "http://login:pass@127.0.0.1:5984",       // Couch URL with admin login:pass
+            nano: "http://admin:admin@127.0.0.1:5984",       // Couch URL with admin login:pass
             users: "_users",                                // Users bucket
             maxIdLength: 200,           // Max _id length
             renewSessionInterval:300,   // Seconds between subsequent _session request
