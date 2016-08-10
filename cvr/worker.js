@@ -297,7 +297,7 @@ module.exports = function (runtime) {
     //----------------------------
 
     function _stashDbs(data) {
-        var i, tmp, pre = {}, dbs = data[0], all = [], pi = Q.defer();
+        var i, tmp, pre = {}, dbs = data, all = [], pi = Q.defer();
         dbs.forEach(function (e) {
             cvr.db[e] = _newDb(e);
         });
