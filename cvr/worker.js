@@ -118,7 +118,7 @@ module.exports = function (runtime) {
             return Q.denodeify(nano.db.list)()
         })
         .then(_stashDbs)
-        .then(_followCouch)
+        //.then(_followCouch)
         .done(function () {
             server.listen(conf.server.port);
             log("CoverCouch start");
